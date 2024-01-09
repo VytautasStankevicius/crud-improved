@@ -1,47 +1,51 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAuthState } from "react-firebase-hooks/auth";
-import {auth, signInWithEmailAndPassword} from "../../services/AuthServices"
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { auth, signInWithEmailAndPassword } from "../../services/AuthServices"
+import { useAuthState } from "react-firebase-hooks/auth"
 
-const Login = ()=>{
-    const navigate = useNavigate();
-const [credentials, setCredentials] = useState({
-    email:'',
-    password:''
-})
-const [user,loading,error] = useAuthState(auth);
-
-
-}
-
-
-const handleChange = (e)=>{
-    const value = e.target.value;
-    setCredentials({
-        ...credentials,
-        [e.target.name]:value
+const Login = () => {
+    const [credentials, setCredentials] = useState({
+        email: '',
+        password: '',
     })
-}
 
-const handleSubmit = (e)=>{
-    e.preventDefault()
-    signInWithEmailAndPassword(credentials.email, credentials.password)
-}
-    return(
+    const [user, loading, error] = useAuthState(auth)
+    const navigate = useNavigate()
+
+    const handleChange = (e) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value })
+    }
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        console.log(credentials)
+
+        await signInWithEmailAndPassword(credentials.email, credentials.password)
+    }
+
+    useEffect(() => {
+        if (loading) return
+        if (user) navigate('/works')
+    }, [user, loading])
+
+    return (
         <div className="container">
-            <h2></h2>
+            <h2 className="mt-3 text-center">
+                Prisijungti
+            </h2>
+
             <form className="form" onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <input name='email' onChange={handleChange} type="text" className="form-control" placeholder="El.pastas" />
+                    <input onChange={handleChange} name="email" type="email" className="form-control" placeholder="Jusu emailas" />
                 </div>
                 <div className="mb-3">
-                    <input name='password' onChange={handleChange} type="password" className="form-control" placeholder="Slaptazodis" />
+                    <input onChange={handleChange} name="password" type="password" className="form-control" placeholder="Slaptazodis" />
                 </div>
                 <div className="mb-3">
-                    <button type='submit'>Prisijungti</button>
+                    <button className="btn btn-primary" type="submit">Prisijungti</button>
                 </div>
-                <div className="mb-3">
-                    <p>Neturite paskyros ?<Link to="/register">Registruokites</Link></p>
+                <div>
+                    <p>Neturite paskyros? <Link to="/register">Galite registruotis</Link></p>
                 </div>
             </form>
         </div>
