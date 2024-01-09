@@ -47,6 +47,9 @@ const Login = () => {
                 <div>
                     <p>Neturite paskyros? <Link to="/register">Galite registruotis</Link></p>
                 </div>
+                <div>
+                    <p>Nepavyksta prisijungti? <Link to="/password-reset">Atstatykiti slaptazodi</Link></p>
+                </div>
             </form>
         </div>
     )
